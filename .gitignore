@@ -1,12 +1,25 @@
-# Ignore everything
+# Ignore everything by default
 *
 
-# Allow directories so we can match files inside them
-!*/
 
-# Keep only MATLAB .m scripts
+# Keep only MATLAB scripts
 !*.m
-
-# (Optional) keep these repo files
-!.gitignore
 !README.md
+
+# Ignore IDE/config folders
+.idea/
+
+# Ignore iteration and test folders
+PSO SO iteration files from*/
+FIRST RUN PSO JUST FOR CHECK/
+MOPSO iteration files from*/
+PSO SO Iteration files from (5) fifth run/
+# Ignore data and other formats
+*.mat
+*.docx
+*.pdf
+*.xlsx
+*.zip
+*.png
+*.ans
+*.fem
