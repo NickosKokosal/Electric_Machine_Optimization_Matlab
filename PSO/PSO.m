@@ -1,0 +1,118 @@
+function [GBEST , cgCurve ] = PSO ( PopulationNo, IterationsNo,  problem, repetitions, Vis )
+format shortG
+% Define the details of the objective function
+nVar = problem.nVar;
+ub   = problem.ub;
+lb   = problem.lb;
+fobj = problem.fobj;
+% Extra variables for data visualization
+%%% average_objective = pagetranspose(zeros(repetitions, IterationsNo,2));
+% average_objective = zeros(repetitions, IterationsNo);
+cgCurve = zeros(repetitions, IterationsNo);
+%CC=[];
+%cgCurve =[0 0];
+FirstP_D1 = zeros(repetitions , IterationsNo);
+Solution_found=zeros(1, repetitions);
+position_history = zeros(PopulationNo , IterationsNo , nVar );
+tt=0;
+% Define the PSO's paramters
+for repNo= 1:repetitions
+wMax = 0.9;
+wMin = 0.2;
+c1 = 2;
+c2 = 2;
+vMax = (ub - lb) .* 0.2;
+vMin  = -vMax;
+% The PSO algorithm
+% Initialize the particles
+for swarm = 1 : PopulationNo
+    Swarm.Particles(swarm).X = (ub-lb) .* rand(1,nVar) + lb;
+    Swarm.Particles(swarm).V = zeros(1, nVar);
+    Swarm.Particles(swarm).PBEST.X = zeros(1,nVar);
+    Swarm.Particles(swarm).PBEST.O = inf;
+    Swarm.GBEST.X = zeros(1,nVar);
+    Swarm.GBEST.O = inf;
+end
+% Main loop
+for iter = 1 : IterationsNo
+tic    
+    % Calcualte the objective value
+    for swarm = 1 : PopulationNo
+    fprintf('Run: %d/%d, Iteration: %d/%d, Swarm: %d/%d \n',...
+            repNo,repetitions,iter,IterationsNo,swarm,PopulationNo);
+        currentX = Swarm.Particles(swarm).X;
+        position_history(swarm , iter , : ) = currentX;
+        
+        Swarm.Particles(swarm).O = fobj(currentX);
+%%%        average_objective(repNo,iter,:) =  average_objective(repNo,iter,:)  + Swarm.Particles(swarm).O;
+        % Update the PBEST
+        if Swarm.Particles(swarm).O < Swarm.Particles(swarm).PBEST.O
+            Swarm.Particles(swarm).PBEST.X = currentX;
+            Swarm.Particles(swarm).PBEST.O = Swarm.Particles(swarm).O;
+        end
+        % Update the GBEST
+        if Swarm.Particles(swarm).O < Swarm.GBEST.O
+            Swarm.GBEST.X = currentX;
+            Swarm.GBEST.O = Swarm.Particles(swarm).O;
+        end
+    end
+    % Update the X and V vectors
+    w = wMax - iter .* ((wMax - wMin) / IterationsNo);
+    FirstP_D1(repNo,iter) = Swarm.Particles(1).X(1);
+    
+    for swarm = 1 : PopulationNo
+        Swarm.Particles(swarm).V = w .* Swarm.Particles(swarm).V + c1 .* rand(1,nVar) .* (Swarm.Particles(swarm).PBEST.X - Swarm.Particles(swarm).X) ...
+            + c2 .* rand(1,nVar) .* (Swarm.GBEST.X - Swarm.Particles(swarm).X);
+        % Check velocities
+        index1 = find(Swarm.Particles(swarm).V > vMax);
+        index2 = find(Swarm.Particles(swarm).V < vMin);
+        
+        Swarm.Particles(swarm).V(index1) = vMax(index1);
+        Swarm.Particles(swarm).V(index2) = vMin(index2);
+        
+        Swarm.Particles(swarm).X = Swarm.Particles(swarm).X + Swarm.Particles(swarm).V;
+        % Check positions
+        index1 = find(Swarm.Particles(swarm).X > ub);
+        index2 = find(Swarm.Particles(swarm).X < lb);
+        
+        Swarm.Particles(swarm).X(index1) = ub(index1);
+        Swarm.Particles(swarm).X(index2) = lb(index2);
+    end
+    
+    if Vis == 1
+     fprintf('--------------------------------------------\n');
+     fprintf('In Iteration : %d \n',iter);
+       fprintf('Best ObjF value so far           : %f   \n',Swarm.GBEST.O);
+     for q=1:nVar
+       fprintf('Best value for variable #%d so far: %f \n',q,Swarm.GBEST.X(q));
+     end
+     fprintf('--------------------------------------------\n');
+    end
+    
+%   CC(repNo,iter,:)=[CC;Swarm.GBEST.O];
+    cgCurve(repNo,iter,:)=Swarm.GBEST.O;
+%   cgCurve(repNo,iter) = Swarm.GBEST.O;
+%%%    average_objective(repNo,iter) = average_objective(repNo,iter) / PopulationNo;
+    
+    fileName = ['SO Results after iteration # ',num2str(iter)]; save(fileName);
+
+  et=toc; tt=tt+et;
+  fprintf('Iteration Time   : %9.2f sec \n',et);
+  fprintf('Total time so far: %9.2f min\n',tt/60);
+  fprintf('--------------------------------------------\n');  
+end
+
+GBEST(repNo) = Swarm.GBEST;
+
+if Vis == 1
+    iterations = 1: IterationsNo;
+    semilogy(iterations,cgCurve(repNo,:));
+    grid on; hold on;
+    title('Convergence curve(s)');
+    xlabel('Iterations');
+    ylabel('Objective Function Value');
+end
+
+end
+saveas(gcf,'Convergence_Curves.png')
+end
