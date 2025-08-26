@@ -1,7 +1,7 @@
 # Electric Machine Optimization with MATLAB-FEMM
 
 This repository contains MATLAB codes and scripts developed for the **design and optimization of a Synchronous Permanent Magnet Motor (PMSM)** intended for **naval electric propulsion applications**.  
-It was carried out as part of the course **Electrical Machines Design for Transportation Electrification (TE-1)** in the M.Sc. program *Technological & Management Advances in Intelligent Transportation Electrification Systems (TMAITES)* at Democritus University of Thrace (D.U.Th.).
+It was carried out as part of the course **Electrical Machines Design for Transportation Electrification** in the M.Sc. program *Technological & Management Advances in Intelligent Transportation Electrification Systems*
 
 We started from a base MATLAB–FEMM code, made significant modifications, and developed additional scripts to meet the **requirements and objectives** of the project.  
 The optimization process explores both **single-objective (PSO)** and **multi-objective (MOPSO)** Particle Swarm Optimization approaches to identify optimal design parameters of the PMSM.
