@@ -1,0 +1,9 @@
+# Αγνόησε όλα τα αρχεία
+*
+
+# Κράτα μόνο τα MATLAB scripts
+!*.m
+
+# Αγνόησε IDE files
+.idea/
+.vscode/
