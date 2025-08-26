@@ -1,9 +1,12 @@
-# Αγνόησε όλα τα αρχεία
+# Ignore everything
 *
 
-# Κράτα μόνο τα MATLAB scripts
+# Allow directories so we can match files inside them
+!*/
+
+# Keep only MATLAB .m scripts
 !*.m
 
-# Αγνόησε IDE files
-.idea/
-.vscode/
+# (Optional) keep these repo files
+!.gitignore
+!README.md
