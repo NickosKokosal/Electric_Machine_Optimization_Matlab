@@ -8,7 +8,7 @@ The optimization process explores both **single-objective (PSO)** and **multi-ob
 
 ---
 # Modified codes
-The archives with the modified codes & the extra scripts which I create and use are:
+The archives with the modified codes & the extra scripts which I have created and use are:
 
 PSO: 1) main_peirama.m, 2) ObjFunc_peirama.m, 3) PSO_peirama.m, 4) MASS_EFF_CODE.m, 5) Best_Values.m, 6) anaktisi_metavlitwn.m,
      7) CHECK_BAD_VALUES_OF_VARIABLES_CODE.m, 8) Convergence_CURVE_RECOVERY_CODE.m
